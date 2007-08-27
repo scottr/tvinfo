@@ -14,6 +14,7 @@ EPGUIDES_PREFIX = "http://www.epguides.com"
 
 import sys
 import os
+import re
 import urllib
 from HTMLParser import HTMLParser
 
@@ -92,6 +93,8 @@ def get_episodes_for_show(name):
                 return None
         return parse_imdb_url(url)
 
+r = re.compile("\"http.*\"")
+
 def get_imdb_link_for_show(name):
         """ Check epguides.com for the show "name" and return its IMDB URL
         """
@@ -101,9 +104,13 @@ def get_imdb_link_for_show(name):
         f = open(filename, 'r')
         for line in f.readlines():
                 if (line.find("<h1>") != -1):
-                        print line
+                        s = r.search(line)
+                        if s == None:
+                                continue
                         f.close()
-                        sys.exit(1)
+                        return line[s.start():s.end()].strip("\"") + "/episodes"
+        f.close()
+        return None
 
 def parse_imdb_url(url):
         """ Takes an URL to an IMDB episodes list, e.g.
@@ -121,8 +128,6 @@ def parse_imdb_url(url):
         p.close()
         return p.episodes
             
-
-
 # We can feed it a local copy of the episodes page for testing:
 if __name__ == "__main__":
         url = "file://" + os.path.abspath(sys.argv[1]) 
