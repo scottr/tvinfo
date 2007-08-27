@@ -9,7 +9,7 @@
 #
 # $Id$
 
-IMDB_PREFIX = "http://www.imdb.com"
+IMDB_PREFIX = "http://www.imdb.com/title"
 
 import sys
 from HTMLParser import HTMLParser
