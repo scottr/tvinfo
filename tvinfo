@@ -10,8 +10,11 @@
 # $Id$
 
 IMDB_PREFIX = "http://www.imdb.com/title"
+EPGUIDES_PREFIX = "http://www.epguides.com"
 
 import sys
+import os
+import urllib
 from HTMLParser import HTMLParser
 
 class IMDBEpisodesParser(HTMLParser):
@@ -77,16 +80,51 @@ class IMDBEpisodesParser(HTMLParser):
 		else:
 			self.episode[self.expecting] = data
 
+def get_episodes_for_show(name):
+        """ Given a show name, e.g. "Dexter", return the episode information.
+        This first goes out to epguides.com to find the appropriate IMDB URL
+        and then parses the IMDB episodes guide for the show, returning the
+        episodes as a list of dictionaries.
+        Returns None if the show cannot be found.
+        """
+        url = get_imdb_link_for_show(name)
+        if (url == None):
+                return None
+        return parse_imdb_url(url)
+
+def get_imdb_link_for_show(name):
+        """ Check epguides.com for the show "name" and return its IMDB URL
+        """
+        (filename, headers) = urllib.urlretrieve(EPGUIDES_PREFIX + "/" + name)
+        if (filename == None):
+                return None
+        f = open(filename, 'r')
+        for line in f.readlines():
+                if (line.find("<h1>") != -1):
+                        print line
+                        f.close()
+                        sys.exit(1)
+
+def parse_imdb_url(url):
+        """ Takes an URL to an IMDB episodes list, e.g.
+        "http://www.imdb.com/title/tt773262/episodes" and returns the episode
+        information.  
+        """
+        (filename, headers) = urllib.urlretrieve(url)
+        if (filename == None):
+                return None
+        p = IMDBEpisodesParser()
+        f = open(filename, 'r')
+        for line in f.readlines():
+                p.feed(line)
+        f.close()
+        p.close()
+        return p.episodes
+            
+
 
 # We can feed it a local copy of the episodes page for testing:
 if __name__ == "__main__":
-	f = open(sys.argv[1], 'r')
-	p = IMDBEpisodesParser()
-
-	for line in f.readlines():
-		p.feed(line)
-
-	print p.episodes
-	p.close()
-	f.close()
+        url = "file://" + os.path.abspath(sys.argv[1]) 
+        print parse_imdb_url(url)
 
