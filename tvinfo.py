@@ -128,8 +128,21 @@ def parse_imdb_url(url):
         p.close()
         return p.episodes
             
-# We can feed it a local copy of the episodes page for testing:
+def print_usage():
+        print "Usage: " + sys.argv[0] + " [imdb_id|show_name]"
+
+imdb_id_re = re.compile("tt[0-9]*$")
 if __name__ == "__main__":
-        url = "file://" + os.path.abspath(sys.argv[1]) 
-        print parse_imdb_url(url)
+        if len(sys.argv) != 2:
+                print_usage()
+                sys.exit(1)
+
+        input = sys.argv[1]
+        if (imdb_id_re.match(input) != None):
+                print "Looking up episodes for IMDB ID " + input + "..."
+                print parse_imdb_url(IMDB_PREFIX + "/" + input + "/episodes")
+        else:
+                print "Looking up episodes for show " + input + "..."
+                print get_episodes_for_show(input)
+
 
