@@ -103,7 +103,6 @@ class TheTVDBBackend:
                                            "/series/" + seriesid + "/all/" \
                                            + language + ".xml", 
                                            "", "", ""])
-                print url
                 f = urllib2.urlopen(url)
                 tree = ElementTree.ElementTree(file=f)
 
