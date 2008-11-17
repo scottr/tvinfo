@@ -102,7 +102,7 @@ def get_backends():
 
 patterns=[
 	# seasonseasonEepisodeepisode
-	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9][0-9])[Eex]([0-9]+).*\.([^.]+)$', 
+        r'(?:e7-)?(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9][0-9])[Eex]([0-9]+).*\.([^.]+)$',
 	# seasonEepisodeepisode
 	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9])[Eex]([0-9]+).*\.([^.]+)$',
 	# seasonseasonepisodeepisode
