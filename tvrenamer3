@@ -228,7 +228,8 @@ def process_file(fname,title,outname):
         # Use the tv module to search for the series name
 
         # XXX: series search doesn't use series_patterns() yet...
-        print "Searching for ", name
+        if debug:
+                print "Searching for ", name
         t = tvinfo.TVFactory("thetvdb","13937A4BBADA99FC")
         series_candidates = t.series_search(name)
         series = None
