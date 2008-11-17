@@ -1,3 +1,9 @@
+#
+# tvinfo
+# (C) 2008 Scott Raynel
+#
+# Portions (C) 2007,2008 Perry Lorier.
+#
 
 """ TV information lookup.
 
@@ -12,8 +18,10 @@ backend is manually specified when creating the factory.
 
 """
 
+
 import shelve
 import os
+import re
 
 import backends
 
@@ -91,3 +99,68 @@ def get_backends():
         """ Return a list of dictionaries describing the available backends.
         """
         return backends.get_backends()
+
+patterns=[
+	# seasonseasonEepisodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9][0-9])[Eex]([0-9]+).*\.([^.]+)$', 
+	# seasonEepisodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9])[Eex]([0-9]+).*\.([^.]+)$',
+	# seasonseasonepisodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9][0-9])([0-9][0-9]).*\.([^.]+)$',
+	# seasonepisodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9])([0-9][0-9]).*\.([^.]+)$',
+	# seasonseason.episodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9][0-9])\.([0-9][0-9]).*\.([^.]+)$',
+	# season.episodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]? *([0-9])\.([0-9][0-9]).*\.([^.]+)$',
+	# Sseasonseason episodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]([0-9]+) ?[Ee]([0-9]+).*\.([^.]+)$',
+	# Sseasonseason.Eepisodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]([0-9]+).[Ee]([0-9]+).*\.([^.]+)$',
+	# Sseasonseason-episodeepisode
+	r'(.*?)[^A-Za-z0-9] *-? *[Ss]([0-9]+)-([0-9]+).*\.([^.]+)$',
+]
+
+def parse_filename(fname):
+        """ Try to figure out the series, season and episode of a filename.
+
+        This uses a bunch of regular expressions to figure out the series name,
+        season number and episode number from a filename. If successfull it
+        returns a tuple of the form:
+                (seriesname,seasonnum,episodenum,ext).
+        If parse_filename() fails, None is returned.
+        """
+	# remove things that look like dates
+	fname=re.sub(r'[-/]20[0-9]','',fname)
+	fname=re.sub(r'[-/]19[789][0-9]','',fname)
+	# Now match it against known patterns
+	for i in patterns:
+		a=re.match(i,fname)
+		if a: 
+			name,season,episode,ext=a.groups()
+			if debug:
+				print "DEBUG: filename:",`fname`
+				print "DEBUG: pattern:",`i`
+				print "DEBUG: parsed as:",a.groups()
+				print "DEBUG: Name:",`name`
+				print "DEBUG: Season:",`season`
+				print "DEBUG: Episode:",`episode`
+				print "DEBUG: Extension:",`ext`
+			if re.match(r"^the[^a-z]",name.lower()):
+				if debug:
+					print "DEBUG: stripping 'the' prefix"
+				name=name[3:]
+			if name.lower().endswith(", the"):
+				if debug:
+					print "DEBUG: stripping ', the' suffix"
+				name=name[:-5]
+			if debug:
+				print "DEBUG: final name:",`name`
+			return (
+				re.sub(r"[^A-Za-z0-9]"," ",name),
+				int(season),
+				int(episode),
+				ext)
+	# The filename follows no known pattern.
+	return None
+
