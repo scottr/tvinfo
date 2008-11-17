@@ -31,8 +31,9 @@ class TVFactory:
         def __init__(self, backend, apidata):
                 """ Create a new TVFactory instance.
 
-                If a backend other than thetvdb.com is required, provide one
-                here.
+                Give the name of a backend (which can be got from the 
+                get_backends() method) as well as any API keys, etc, that
+                the backend requests.
                 """
                 self.__backend = backends.get_backend(backend).get_instance(apidata)
                 self.__backend_name = backends.get_backend(backend).module_name
