@@ -35,6 +35,7 @@ class TVFactory:
                 here.
                 """
                 self.__backend = backends.get_backend(backend).get_instance(apidata)
+                self.__backend_name = backends.get_backend(backend).module_name
 
         def series_search(self, seriesname, use_cache=True):
                 """ Search the web-service for series matching the seriesname.
@@ -56,11 +57,11 @@ class TVFactory:
                 results = []
 
                 if use_cache:
-                        for series in _tv_series_cache.keys():
+                        for series in _tv_series_cache.get(self.__backend_name, {}).keys():
                                 if seriesname.lower().strip() == series.lower().strip():
                                         if debug:
                                                 print "tv: Cache hit: ", series
-                                        results.append(_tv_series_cache[series])
+                                        results.append(_tv_series_cache[self.__backend_name][series])
                         if results:
                                 return results
 
@@ -68,7 +69,10 @@ class TVFactory:
 
                 # Add the results to the local cache
                 for r in results:
-                        _tv_series_cache[r.get_title().lower().strip()] = r
+                        cache = _tv_series_cache.get(self.__backend_name, {})
+                        if cache == {}:
+                                _tv_series_cache[self.__backend_name] = cache
+                        cache[r.get_title().lower().strip()] = r
 
                 return results
 
