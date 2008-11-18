@@ -207,7 +207,7 @@ class Episode:
         def get_episode_number(self):
                 """ Get the episode number of this episode.
                 """
-                return self.__epsiode_number
+                return self.__episode_number
         
         def set_episode_number(self, episode_number):
                 """ Set the episode number for this episode.
