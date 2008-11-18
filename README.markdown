@@ -1,6 +1,6 @@
-### tvinfo ###
+# tvinfo #
 
-# tools for performing TV information lookup #
+tools for performing TV information lookup
 
 (c) 2008 Scott Raynel <scottraynel@gmail.com>
 
@@ -14,11 +14,17 @@ Python distutils setup script. Install to your system using:
 
     $ sudo python setup.py install
 
+Or install to your home directory using:
+
+    $ python setup.py install --prefix $HOME
+
+and make sure that you've set your $PYTHONPATH correctly.
+
 ## More Info ##
 
 This package contains the tvinfo module and the tvrenamer3 script.
 
-# tvinfo #
+### tvinfo ###
 
 The tvinfo module provides an interface for performing lookups
 of TV episode information from various webservices. A default
@@ -28,7 +34,7 @@ that describes series, seasons and episodes.
 The tvinfo module provides caching of episode information and
 a way for different backends to be easily added.
 
-# tvrenamer #
+### tvrenamer ###
 
 The tvrenamer3 script is provided as part of the standard package
 to help organise your time-shifted TV files. tvrenamer3 will attempt
