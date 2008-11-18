@@ -236,7 +236,7 @@ def process_file(fname,title,outname):
 
         for x in series_candidates:
                 if debug:
-                        print "series candidate: '" + x.title + "'"
+                        print "series candidate: '" + x.get_title() + "'"
                 if x.get_title().lower().strip() in [y.lower().strip() for y in series_patterns(name)]:
                         series = x
                         break
