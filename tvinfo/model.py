@@ -120,7 +120,7 @@ class Series:
                 """ Return a sorted list of Season objects for this Series.
 
                 """
-                return [ s for snum, s in sorted(self.seasons.items()) ]
+                return [ s for snum, s in sorted(self.__seasons.items()) ]
 
 class Season:
         """ Describes a TV season.
@@ -163,7 +163,7 @@ class Season:
         def get_episodes(self):
                 """ Get the episodes for this season as a sorted list. 
                 """
-                return [ e for enum, e in sorted(self.episodes.items()) ]
+                return [ e for enum, e in sorted(self.__episodes.items()) ]
 
 class Episode:
         """ Describes a single TV episode.
