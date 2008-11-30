@@ -157,7 +157,7 @@ def parse_filename(fname):
 			if debug:
 				print "DEBUG: final name:",`name`
 			return (
-				re.sub(r"[^A-Za-z0-9]"," ",name),
+				re.sub(r"[^A-Za-z0-9]"," ",name).strip(),
 				int(season),
 				int(episode),
 				ext)

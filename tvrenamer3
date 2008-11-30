@@ -202,6 +202,8 @@ def series_patterns(name):
 	ret=[]
 	# Try the raw series name
 	ret.append(name)
+        # Try with "the" prepended
+        ret.append("the " + name)
 	# Dates at the end might indicate that this series has two runs 
 	# from different dates.
 	if re.match(r"^(19[5-9][0-9]|20[0-1][0-9])$",name[-4:]):
