@@ -180,7 +180,8 @@ def rename(f,t):
 # them out
 def fix_name(fname):
 	"Strip charactors from filenames that cause filesystems issues"
-	for i in "?:*+/\\"+"".join([chr(x) for x in range(32)])+"".join([chr(x) for x in range(128,256)]):
+        fname = fname.encode("UTF-8")
+	for i in "?:*+/\\"+"".join([chr(x) for x in range(32)]):
 		fname=fname.replace(i," ")
 	while "  " in fname:
 		fname=fname.replace("  "," ")
